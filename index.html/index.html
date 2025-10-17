@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>💖 Galaxy Love Cute Mode 💖</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: radial-gradient(circle at 20% 20%, #1a0026 0%, #0d0014 50%, #000 100%);
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      user-select: none;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+    .text {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255, 100, 200, 0.8);
+      animation: pop 2s ease-in-out infinite alternate;
+    }
+    @keyframes pop {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      100% { transform: translate(-50%, -50%) scale(1.05); }
+    }
+    .text h1 {
+      font-size: 48px;
+      margin: 0;
+      color: #ffd6ef;
+    }
+    .text p {
+      margin: 10px 0 0;
+      color: #ffc5e1;
+      font-size: 20px;
+    }
+    .emoji {
+      position: absolute;
+      font-size: 20px;
+      animation: fall linear;
+      opacity: 0.8;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <canvas id="heart"></canvas>
+
+  <div class="text">
+    <h1>Hai Cantik Eka Wahyuning Tiyasa</h1>
+    <p id="caption">Jangan Cuek-Cuek Lagi Dong😊</p>
+  </div>
+
+  <script>
+    // ======== Galaxy Background ========
+    const bg = document.getElementById("bg");
+    const bctx = bg.getContext("2d");
+    let W = bg.width = window.innerWidth;
+    let H = bg.height = window.innerHeight;
+    const stars = [];
+
+    for (let i = 0; i < 500; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        size: Math.random() * 1.2 + 0.5,
+        speed: Math.random() * 0.3 + 0.1,
+        hue: Math.random() * 40 + 300
+      });
+    }
+
+    function drawGalaxy() {
+      bctx.fillStyle = "rgba(0,0,0,0.2)";
+      bctx.fillRect(0, 0, W, H);
+      for (let s of stars) {
+        bctx.beginPath();
+        bctx.fillStyle = `hsl(${s.hue}, 100%, 75%)`;
+        bctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        bctx.fill();
+
+        s.y += s.speed;
+        if (s.y > H) s.y = 0;
+      }
+      requestAnimationFrame(drawGalaxy);
+    }
+    drawGalaxy();
+
+    // ======== Heart-shaped Photo ========
+    const heartCanvas = document.getElementById("heart");
+    const hctx = heartCanvas.getContext("2d");
+    heartCanvas.width = W;
+    heartCanvas.height = H;
+
+    const img = new Image();
+    img.src = "your-photo.jpg"; // <-- Ganti dengan fotomu
+
+    img.onload = () => {
+      const scale = Math.min(W, H) / 8;
+      const cx = W / 2;
+      const cy = H / 2;
+
+      hctx.save();
+      hctx.beginPath();
+
+      for (let t = 0; t < Math.PI * 2; t += 0.01) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+        hctx.lineTo(cx + x * scale, cy - y * scale);
+      }
+      hctx.closePath();
+      hctx.clip();
+
+      const iw = img.width;
+      const ih = img.height;
+      const aspect = iw / ih;
+      const size = Math.min(W, H) * 0.8;
+      const drawW = size;
+      const drawH = size / aspect;
+      hctx.drawImage(img, cx - drawW / 2, cy - drawH / 2, drawW, drawH);
+      hctx.restore();
+    };
+
+    // ======== Falling Emoji Effect ========
+    const emojis = ["💖", "💞", "💕", "💘", "🌸", "🌙", "🐰", "💫"];
+    function createEmoji() {
+      const e = document.createElement("div");
+      e.className = "emoji";
+      e.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      e.style.left = Math.random() * 100 + "vw";
+      e.style.animationDuration = Math.random() * 5 + 3 + "s";
+      e.style.fontSize = Math.random() * 16 + 20 + "px";
+      document.body.appendChild(e);
+      setTimeout(() => e.remove(), 8000);
+    }
+    setInterval(createEmoji, 500);
+
+    // ======== Romantic Caption Rotation ========
+    const captions = [
+      "Lihatlah ke arahku sekali lagi",
+      "Aku nggak minta kamu ngerti semuanya, cukup jangan ragukan niat baikku",
+      "Aku nggak berharap dibalas, cukup kamu tau dan lihat ke arahku",
+      "Aku tetap sama, meski nggak selalu dilihat",
+      "Aku akan buktikan semuanya ketika aku sudah siap semuanya"
+    ];
+    let idx = 0;
+    const captionEl = document.getElementById("caption");
+    setInterval(() => {
+      idx = (idx + 1) % captions.length;
+      captionEl.textContent = captions[idx];
+    }, 4000);
+
+    // Resize
+    window.addEventListener("resize", () => {
+      W = bg.width = heartCanvas.width = window.innerWidth;
+      H = bg.height = heartCanvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
